@@ -1,0 +1,28 @@
+{
+  "repoOwner": "DevOps",
+  "repoName": "acb-database-snapshot",
+  "jobName": "DevOps/acb-database-snapshot#2597",
+  "buildUrl": "job/DevOps/job/acb-database-snapshot/2597/",
+  "buildNumber": 2597,
+  "trigger": "Started by timer",
+  "blocked": false,
+  "blockedTime": 0,
+  "duration": 40281,
+  "passed": true,
+  "result": "CompletedSuccess",
+  "stages": [
+      {
+          "stageName": "Take new snapshot",
+          "buildState": "CompletedSuccess",
+          "duration": 1914,
+          "passed": true
+      },
+      {
+          "stageName": "Remove old snapshot",
+          "buildState": "CompletedSuccess",
+          "duration": 34396,
+          "passed": true
+      }
+  ],
+  "timestamp": 1616746960
+}
