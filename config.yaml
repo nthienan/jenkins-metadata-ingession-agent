@@ -2,4 +2,4 @@ logging:
   level: INFO
 
 elasticsearch:
-  url: https://apm.creditstrong.com:9200/
+  url: https://elasticsearch:9200

@@ -1,9 +1,32 @@
 from flask import Flask, jsonify
 from flask_restful import Api
 from werkzeug.exceptions import HTTPException, default_exceptions
+import logging
+
+from endpoints.build import Build
 
 
 app = Flask(__name__)
+
+def init_logger(level="INFO"):
+    logger = logging.getLogger()
+    logger.setLevel(level)
+
+    formatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+
+
+def init_error_handler(app, error_handler):
+    for ex in default_exceptions:
+        app.register_error_handler(ex, error_handler)
+
+    api = Api(app)
+    api.prefix = '/api'
+
+    api.add_resource(Build, '/builds')
 
 
 @app.errorhandler(Exception)
@@ -14,16 +37,7 @@ def handle_error(e):
     return jsonify(error=str(e)), code
 
 
-def initilze(app, error_handler):
-    for ex in default_exceptions:
-        app.register_error_handler(ex, error_handler)
-
-    api = Api(app)
-    api.prefix = '/api'
-
-    # api.add_resource(BuildsResource, '/builds', '/users/<int:user_id>')
-
-
 if __name__ == '__main__':
-    initilze(app, handle_error)
-    app.run(debug=True)
+    init_logger()
+    init_error_handler(app, handle_error)
+    app.run()
