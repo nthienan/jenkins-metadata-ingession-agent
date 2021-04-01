@@ -1,5 +1,6 @@
+import logging
 from flask_restful import Resource
-from flask import request
+from flask import request, current_app
 from datetime import datetime, timezone
 import uuid
 
@@ -9,16 +10,14 @@ from plugins.database.elasticsearch import Elasticsearch
 class Build(Resource):
 
     def __init__(self):
-        self._index_pattern = "jenkins-build-metadata"
-        self.elasticsearch = Elasticsearch("https://apm.creditstrong.com:9200")
-
-    def get(self):
-        return {'hello': 'world'}
+        self._index_pattern = current_app.config["elasticsearch"]["index-pattern"]["build-metadata"]
+        logging.info("Jenkins build metadata index pattern is '%s'" % self._index_pattern)
+        self.elasticsearch = Elasticsearch(current_app.config["elasticsearch"]["url"])
 
     def post(self):
         data = request.json
         data["id"] = str(uuid.uuid4())
-        data['time'] = datetime.fromtimestamp(int(data['timestamp']), timezone.utc).isoformat()
+        data["time"] = datetime.fromtimestamp(int(data["timestamp"]), timezone.utc).isoformat()
 
         payload = []
         payload.append(self._build_metadata(data))
@@ -31,8 +30,8 @@ class Build(Resource):
     def _build_metadata(self, data: dict):
         metadata = {"index": {}}
 
-        timestamp = int(data['timestamp'])
-        time_pattern = datetime.fromtimestamp(timestamp).strftime('%Y-%m')
+        timestamp = int(data["timestamp"])
+        time_pattern = datetime.fromtimestamp(timestamp).strftime("%Y-%m")
 
         metadata["index"]["_index"] = "%s-%s" % (self._index_pattern, time_pattern)
         metadata["index"]["_id"] = data["id"]

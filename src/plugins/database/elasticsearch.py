@@ -1,4 +1,5 @@
 import json
+import logging
 import requests
 
 
@@ -6,6 +7,7 @@ class Elasticsearch:
 
     def __init__(self, url):
         self.url = url
+        logging.info("Initilized Elasticsearch client at %s" % url)
 
     def store(self, data):
         url = self.url + '/_bulk'
