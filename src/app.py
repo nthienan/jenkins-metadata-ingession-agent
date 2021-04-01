@@ -64,6 +64,11 @@ def handle_error(e):
     return jsonify(error=str(e)), code
 
 
+@app.route("/health")
+def health_check():
+    return {"status": "ok"}, 200
+
+
 if __name__ == "__main__":
     opts = parse_opts(sys.argv[1:])
 
