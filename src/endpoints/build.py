@@ -11,18 +11,16 @@ class Build(Resource):
 
     def __init__(self):
         self._index_pattern = current_app.config["elasticsearch"]["index-pattern"]["build-metadata"]
-        logging.info("Jenkins build metadata index pattern is '%s'" % self._index_pattern)
         self.elasticsearch = Elasticsearch(current_app.config["elasticsearch"]["url"])
 
     def post(self):
         data = request.json
+        logging.info(data)
+
         data["id"] = str(uuid.uuid4())
         data["time"] = datetime.fromtimestamp(int(data["timestamp"]), timezone.utc).isoformat()
 
-        payload = []
-        payload.append(self._build_metadata(data))
-        payload.append(data)
-
+        payload = [self._build_metadata(data), data]
         self.elasticsearch.store(payload)
 
         return {"status": "Successful"}, 201
