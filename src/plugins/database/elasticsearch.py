@@ -26,3 +26,14 @@ class Elasticsearch:
         logging.debug("Store data into Elasticsearch successfully. It took %.3f seconds" % round(time.perf_counter()- start, 3))
 
         return response
+
+    def query(self, target, query):
+        start = time.perf_counter()
+        url = f"{self.url}/{target}/_search"
+        headers = {"Content-Type": "application/json"}
+
+        response = requests.post(url, data=query, headers=headers)
+        response.raise_for_status()
+
+        logging.debug("Query data from Elasticsearch successfully. It took %.3f seconds" % round(time.perf_counter()- start, 3))
+        return response
