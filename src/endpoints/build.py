@@ -17,7 +17,8 @@ class Build(Resource):
 
     def get(self):
         folder = request.args.get("folder")
-        period = request.args.get("period")
+        from_period = request.args.get("from")
+        to_period = request.args.get("to")
         status = request.args.get("status")
 
         query = {
@@ -39,8 +40,8 @@ class Build(Resource):
                         {
                             "range": {
                                 "time": {
-                                    "from": f"now-{period}m",
-                                    "to": "now"
+                                    "from": f"now-{from_period}",
+                                    "to": f"now-{to_period}"
                                 }
                             }
                         }
